@@ -1,0 +1,84 @@
+form: X12
+version: '005010'
+imports: [ '/x12/005010/basedefs.esl' ]
+id: '271'
+name: 'Eligibility, Coverage or Benefit Information'
+class: 'HB'
+heading: 
+- { idRef: 'ST', position: '0100', usage: M }
+- { idRef: 'BHT', position: '0200', usage: M }
+detail: 
+- groupId: '2000_Loop'
+  count: '>1'
+  usage: M
+  items: 
+  - { idRef: 'HL', position: '0100', usage: M }
+  - { idRef: 'TRN', position: '0200', usage: O, count: 9 }
+  - { idRef: 'AAA', position: '0250', usage: O, count: 9 }
+  - groupId: '2100_Loop'
+    count: '>1'
+    usage: O
+    items: 
+    - { idRef: 'NM1', position: '0300', usage: O }
+    - { idRef: 'REF', position: '0400', usage: O, count: 9 }
+    - { idRef: 'N2', position: '0500', usage: O }
+    - { idRef: 'N3', position: '0600', usage: O }
+    - { idRef: 'N4', position: '0700', usage: O }
+    - { idRef: 'PER', position: '0800', usage: O, count: 3 }
+    - { idRef: 'AAA', position: '0850', usage: O, count: 9 }
+    - { idRef: 'PRV', position: '0900', usage: O }
+    - { idRef: 'DMG', position: '1000', usage: O }
+    - { idRef: 'INS', position: '1100', usage: O }
+    - { idRef: 'HI', position: '1150', usage: O }
+    - { idRef: 'DTP', position: '1200', usage: O, count: 9 }
+    - { idRef: 'LUI', position: '1250', usage: O, count: 9 }
+    - { idRef: 'MPI', position: '1275', usage: O, count: 9 }
+    - groupId: '2110_Loop'
+      count: '>1'
+      usage: O
+      items: 
+      - { idRef: 'EB', position: '1300', usage: O }
+      - { idRef: 'HSD', position: '1350', usage: O, count: 9 }
+      - { idRef: 'REF', position: '1400', usage: O, count: 9 }
+      - { idRef: 'DTP', position: '1500', usage: O, count: 20 }
+      - { idRef: 'AAA', position: '1600', usage: O, count: 9 }
+      - { idRef: 'VEH', position: '1700', usage: O }
+      - { idRef: 'PID', position: '1800', usage: O }
+      - { idRef: 'PDR', position: '1900', usage: O }
+      - { idRef: 'PDP', position: '2000', usage: O }
+      - { idRef: 'LIN', position: '2100', usage: O }
+      - { idRef: 'EM', position: '2200', usage: O }
+      - { idRef: 'SD1', position: '2300', usage: O }
+      - { idRef: 'PKD', position: '2400', usage: O }
+      - { idRef: 'MSG', position: '2500', usage: O, count: 10 }
+      - groupId: '2115_Loop'
+        count: '>1'
+        usage: O
+        items: 
+        - { idRef: 'III', position: '2600', usage: O }
+        - { idRef: 'DTP', position: '2700', usage: O, count: 5 }
+        - { idRef: 'AMT', position: '2800', usage: O, count: 5 }
+        - { idRef: 'PCT', position: '2900', usage: O, count: 5 }
+        - groupId: '2117_Loop'
+          count: '>1'
+          usage: O
+          items: 
+          - { idRef: 'LQ', position: '3000', usage: O }
+          - { idRef: 'AMT', position: '3100', usage: O, count: 5 }
+          - { idRef: 'PCT', position: '3200', usage: O, count: 5 }
+      - wrapId: '2120'
+        position: '3300'
+        endPosition: '4000'
+        usage: O
+        group: 
+        - groupId: '2120_Loop'
+          count: '>1'
+          usage: O
+          items: 
+          - { idRef: 'NM1', position: '3400', usage: O }
+          - { idRef: 'N2', position: '3500', usage: O }
+          - { idRef: 'N3', position: '3600', usage: O }
+          - { idRef: 'N4', position: '3700', usage: O }
+          - { idRef: 'PER', position: '3800', usage: O, count: 3 }
+          - { idRef: 'PRV', position: '3900', usage: O }
+- { idRef: 'SE', position: '4100', usage: M }

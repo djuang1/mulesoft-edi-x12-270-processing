@@ -1,0 +1,45 @@
+form: X12
+version: '005010'
+imports: [ '/x12/005010/basedefs.esl' ]
+id: '270'
+name: 'Eligibility, Coverage or Benefit Inquiry'
+class: 'HS'
+heading: 
+- { idRef: 'ST', position: '0100', usage: M }
+- { idRef: 'BHT', position: '0200', usage: M }
+detail: 
+- groupId: '2000_Loop'
+  count: '>1'
+  usage: M
+  items: 
+  - { idRef: 'HL', position: '0100', usage: M }
+  - { idRef: 'TRN', position: '0200', usage: O, count: 9 }
+  - groupId: '2100_Loop'
+    count: '>1'
+    usage: M
+    items: 
+    - { idRef: 'NM1', position: '0300', usage: M }
+    - { idRef: 'REF', position: '0400', usage: O, count: 9 }
+    - { idRef: 'N2', position: '0500', usage: O }
+    - { idRef: 'N3', position: '0600', usage: O }
+    - { idRef: 'N4', position: '0700', usage: O }
+    - { idRef: 'PER', position: '0800', usage: O, count: 3 }
+    - { idRef: 'PRV', position: '0900', usage: O }
+    - { idRef: 'DMG', position: '1000', usage: O }
+    - { idRef: 'INS', position: '1100', usage: O }
+    - { idRef: 'HI', position: '1150', usage: O }
+    - { idRef: 'DTP', position: '1200', usage: O, count: 9 }
+    - { idRef: 'MPI', position: '1250', usage: O, count: 9 }
+    - groupId: '2110_Loop'
+      count: 99
+      usage: O
+      items: 
+      - { idRef: 'EQ', position: '1300', usage: O }
+      - { idRef: 'AMT', position: '1350', usage: O, count: 2 }
+      - { idRef: 'VEH', position: '1400', usage: O }
+      - { idRef: 'PDR', position: '1500', usage: O }
+      - { idRef: 'PDP', position: '1600', usage: O }
+      - { idRef: 'III', position: '1700', usage: O, count: 10 }
+      - { idRef: 'REF', position: '1900', usage: O }
+      - { idRef: 'DTP', position: '2000', usage: O, count: 9 }
+- { idRef: 'SE', position: '2100', usage: M }

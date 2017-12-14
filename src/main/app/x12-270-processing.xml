@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:x12-edi="http://www.mulesoft.org/schema/mule/x12-edi" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/x12-edi http://www.mulesoft.org/schema/mule/x12-edi/current/mule-x12-edi.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+
+    <x12-edi:config name="X12_EDI" interchangeIdQualifierSelf="ZZ" interchangeIdSelf="RECEIVER" groupIdSelf="RECEIVER" interchangeIdQualifierPartner="ZZ" interchangeIdPartner="SENDER" groupIdPartner="SENDER" valueLengthErrorFail="false" invalidCharacterInValueFail="false" wrongValuesRepeatsFail="false" unknownsSegmentFail="false" segmentOutOfOrderFail="false" unusedSegmentPresentFail="false" wrongSegmentsRepeatsFail="false" doc:name="EDI">
+        <x12-edi:schemas>
+            <x12-edi:schema>/x12/005010/270.esl</x12-edi:schema>
+            <x12-edi:schema>/x12/005010/271.esl</x12-edi:schema>
+        </x12-edi:schemas>
+    </x12-edi:config>
+    <flow name="x12-270-processingFlow">
+        <sftp:inbound-endpoint host="${sftp.host}" port="${sftp.port}" path="${sftp.path}" user="${sftp.user}" password="${sftp.password}" responseTimeout="10000" pollingFrequency="5000" doc:name="SFTP"/>
+        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="x12-270-processingFlow1">
+        <file:inbound-endpoint path="${file.in}" moveToPattern="processed.edi" moveToDirectory="${file.out}" responseTimeout="10000" doc:name="File"/>
+        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
+    </flow>
+    
+    <flow name="read-270-message">
+        <x12-edi:read config-ref="X12_EDI" doc:name="X12 EDI"/>
+        <enricher doc:name="Message Enricher" target="flowVars.eligibility">
+            <flow-ref name="process-270-flow" doc:name="Process Message"/>
+        </enricher>
+        <flow-ref name="return-997-flow" doc:name="Return ACK"/>
+    </flow>
+    <flow name="process-270-flow">
+        <foreach collection="#[payload.TransactionSets.v005010.270]" doc:name="For Each 270">
+            <foreach collection="#[payload.Detail.2000_Loop]" doc:name="For Each Individual or Organization">
+                <logger message="Entity Type Qualifier - #[payload.2100_Loop[0].0300_NM1.NM102] - Name Last Or Organization Name - #[payload.2100_Loop[0].0300_NM1.NM103]" level="INFO" doc:name="Logger"/>
+                <set-variable variableName="entityRecord" value="#[payload.2100_Loop[0].0300_NM1]" doc:name="Variable"/>
+                <choice doc:name="Choice">
+                    <when expression="#[payload.2100_Loop[0].0300_NM1.NM102 == 1]">
+                        <logger message="Name - #[payload.2100_Loop[0].0300_NM1.NM103]" level="INFO" doc:name="Logger"/>
+                        <dw:transform-message doc:name="Transform Message">
+                            <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+---
+{
+	entity: flowVars.entityRecord
+}]]></dw:set-payload>
+                        </dw:transform-message>
+                        <file:outbound-endpoint path="${file.out}" outputPattern="individual.xml" responseTimeout="10000" doc:name="File"/>
+                    </when>
+                    <otherwise>
+                        <logger message="Organization - #[payload.2100_Loop[0].0300_NM1.NM103]" level="INFO" doc:name="Logger"/>
+                        <dw:transform-message doc:name="Transform Message">
+                            <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+---
+{
+	entity: flowVars.entityRecord
+}]]></dw:set-payload>
+                        </dw:transform-message>
+                        <file:outbound-endpoint path="${file.out}" outputPattern="organization#[flowVars.counter].xml" responseTimeout="10000" doc:name="File"/>
+                    </otherwise>
+                </choice>
+            </foreach>
+        </foreach>
+    </flow>
+    <flow name="return-997-flow">
+        <set-payload value="#[ ['TransactionSets' : ['v005010' : ['997' : payload.FunctionalAcksGenerated] ] ] ]" doc:name="Set Payload"/>
+        <x12-edi:write config-ref="X12_EDI" doc:name="X12 EDI"/>
+        <file:outbound-endpoint path="${file.out}" outputPattern="ack.edi" responseTimeout="10000" doc:name="File"/>
+    </flow>
+</mule>
