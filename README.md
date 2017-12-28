@@ -4,7 +4,7 @@ This is a project that demonstrates processing an X12 270 message using MuleSoft
 ## Application Flow
 The diagram below shows the flow of the application and how it interacts with Anypoint MQ.
 
-<img src="https://raw.githubusercontent.com/djuang1/mulesoft-edi-x12-270-processing/master/assets/x12-270-processing.png" width="500px">
+<img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-processing.png" width="500px">
 
 ## Setup
 1. Create Client App in MQ and copy down the client ID and client secret
