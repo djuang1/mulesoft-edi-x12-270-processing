@@ -2,7 +2,8 @@
 This is a project that demonstrates processing an X12 270 message using MuleSoft Anypoint B2B. The project parses a 270 from a Provider and generates individual entity files in XML. Future version will include the 271 message from the Payer on subscriber or dependent eligibility.
 
 ## Application Flow
-The diagram below shows the flow of the application and how it interacts with Anypoint MQ.
+
+<img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-input.png" width="200px">
 
 <img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-processing.png" width="500px">
 
@@ -14,3 +15,8 @@ The diagram below shows the flow of the application and how it interacts with An
 3. Run project
 4. Copy the .edi files from <b>src/main/resources</b> into the <b>in</b> folder
 5. Navigate to the <b>out</b> folder to see the generated entities from the .edi file.
+
+## Resources
+
+- Anypoint B2B - https://docs.mulesoft.com/anypoint-b2b/
+- Overview of EDI file <b>generic request by clinic for patient - 270 - 1.edi</b> - http://www.x12.org/examples/005010X279/subscriber-who-is-also-the-patient/generic-request-by-clinic-for-patient-(subscriber)-eligibility/
