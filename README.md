@@ -3,7 +3,7 @@ This is a project that demonstrates processing an X12 270 message using MuleSoft
 
 ## Application Flow
 
-<img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-input.png" width="200px">
+<img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-input.png" width="175px">
 
 <img src="https://github.com/djuang1/mulesoft-edi-x12-270-processing/blob/master/assets/x12-270-processing.png" width="500px">
 
