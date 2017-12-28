@@ -17,14 +17,7 @@ http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sft
             <x12-edi:schema>/x12/005010/271.esl</x12-edi:schema>
         </x12-edi:schemas>
     </x12-edi:config>
-    <flow name="x12-270-processingFlow">
-        <sftp:inbound-endpoint host="${sftp.host}" port="${sftp.port}" path="${sftp.path}" user="${sftp.user}" password="${sftp.password}" responseTimeout="10000" pollingFrequency="5000" doc:name="SFTP"/>
-        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
-    </flow>
-    <flow name="x12-270-processingFlow1">
-        <file:inbound-endpoint path="${file.in}" moveToPattern="processed.edi" moveToDirectory="${file.out}" responseTimeout="10000" doc:name="File"/>
-        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
-    </flow>
+    
     
     <flow name="read-270-message">
         <x12-edi:read config-ref="X12_EDI" doc:name="X12 EDI"/>

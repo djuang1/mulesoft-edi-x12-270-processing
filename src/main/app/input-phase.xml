@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.9.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd 
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<flow name="x12-270-processingFlow">
+        <sftp:inbound-endpoint host="${sftp.host}" port="${sftp.port}" path="${sftp.path}" user="${sftp.user}" password="${sftp.password}" responseTimeout="10000" pollingFrequency="5000" doc:name="SFTP"/>
+        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
+    </flow>
+    <flow name="x12-270-processingFlow1">
+        <file:inbound-endpoint path="${file.in}" moveToPattern="processed.edi" moveToDirectory="${file.out}" responseTimeout="10000" doc:name="File"/>
+        <flow-ref name="read-270-message" doc:name="Flow Reference"/>
+    </flow>
+
+</mule>
